@@ -28,9 +28,6 @@
     ("c968804189e0fc963c641f5c9ad64bca431d41af2fb7e1d01a2a6666376f819c" "8543b328ed10bc7c16a8a35c523699befac0de00753824d7e90148bca583f986" default)))
  '(electric-indent-mode nil)
  '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(package-selected-packages
-   (quote
-    (lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 
@@ -69,7 +66,7 @@ There are two things you can do about this warning:
 (use-package base16-theme
   :ensure t
   :config
-  (load-theme 'base16-default-dark t))
+  (load-theme 'base16-monokai t))
 
 ;; No scroll bar #HARDCORE MODE
 (setq scroll-bar-mode nil)
