@@ -66,9 +66,11 @@ There are two things you can do about this warning:
 (package-initialize)
 
 ;; Load Theme
-(load-theme 'base16-monokai t)
-;; Don't indent automatically on every <RET> press.
-;;(setq electric-indent-mode nil)
+(use-package base16-theme
+  :ensure t
+  :config
+  (load-theme 'base16-default-dark t))
+
 ;; No scroll bar #HARDCORE MODE
 (setq scroll-bar-mode nil)
 ;; No tool bar #HARDCORE MODE
