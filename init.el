@@ -30,13 +30,16 @@
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
+    (adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 
 ;; move cursor by camelCase
 (global-subword-mode 1)
 ;; 1 for on, 0 for off
+
+;; Don't truncate lines, make them wrap.
+(setq truncate-lines nil)
 
 ;; No welcome screen.
 (setq inhibit-startup-screen t)
@@ -118,4 +121,10 @@ There are two things you can do about this warning:
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
- 
+;; Toggle visual-line-mode in Org-mode so lines wrap nicely.
+(add-hook 'org-mode-hook #'visual-line-mode)
+
+;; Clutch package that makes visual wraps align with indentation.
+(use-package adaptive-wrap
+  :ensure t
+  :hook (visual-line-mode . adaptive-wrap-prefix-mode))
