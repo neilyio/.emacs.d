@@ -122,7 +122,7 @@ There are two things you can do about this warning:
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
 ;; Toggle visual-line-mode in Org-mode so lines wrap nicely.
-(add-hook 'org-mode-hook #'visual-line-mode)
+(add-hook 'org-mode-hook 'visual-line-mode)
 
 ;; Clutch package that makes visual wraps align with indentation.
 (use-package adaptive-wrap
