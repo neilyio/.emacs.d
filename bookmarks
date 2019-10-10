@@ -1,0 +1,10 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*- 
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("org-refile-last-stored"
+ (filename . "~/Desktop/lightingList.org")
+ (front-context-string . "** (6) cubetaps\n")
+ (rear-context-string . "nk of trickline\n")
+ (position . 780))
+)
