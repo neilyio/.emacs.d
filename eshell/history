@@ -45,3 +45,11 @@ ls
 cd ../
 cd ../Documents/GitHub/me-site
 node --inspect-brk --no-lazy node_modules/gatsby/dist/bin/gatsby develop
+cd ../
+cd ../
+l
+ls
+cd ../Desktop/processingBox
+browse-url-of-file
+gatsby develop
+gatsby develop

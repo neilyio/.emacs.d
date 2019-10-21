@@ -13,9 +13,16 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; No Eldoc, it was causing performance problems.
+(global-eldoc-mode -1)
+
 (eval-when-compile
   (require 'use-package))
 
+;; Key re-bindings
+;; Give imenu a shortcut.
+;; This nukes tab-to-tab-stop, which you'll never ever use.
+(global-set-key (kbd "M-i") 'imenu)
 
 ;; Emacs full screen on startup.
 (custom-set-variables
@@ -30,7 +37,7 @@
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
+    (helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 
@@ -117,6 +124,8 @@ There are two things you can do about this warning:
 
 (use-package company-lsp :commands company-lsp)
 
+(use-package yasnippet :ensure t)
+
 ;; RJSX mode file registration.
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
@@ -128,3 +137,28 @@ There are two things you can do about this warning:
 (use-package adaptive-wrap
   :ensure t
   :hook (visual-line-mode . adaptive-wrap-prefix-mode))
+
+;; Send all the auto-save files to their own directory.
+(defvar backup-dir (expand-file-name "~/.emacs.d/backup/"))
+(defvar autosave-dir (expand-file-name "~/.emacs.d/autosave/"))
+(setq backup-directory-alist (list (cons ".*" backup-dir)))
+(setq auto-save-list-file-prefix autosave-dir)
+(setq auto-save-file-name-transforms `((".*" ,autosave-dir t)))
+
+;; Helm things, disabled until mastered IDO.
+;; (require 'helm-config)
+;; (helm-mode 1)
+
+;; Ido mode
+(ido-mode 1)
+(setq ido-everywhere t)
+(setq ido-enable-flex-matching t)
+
+;; Set default folder for orgmode capture.
+(setq org-default-notes-file (concat org-directory "~/orgmode/notes.org"))
+
+;; Set default file for orgmode diary.
+(setq diary-file "~/orgmode/diary")
+
+;; Bind org-capture to easy shortcut. C-c c is recommended by manual.
+(global-set-key (kbd "C-c c") 'org-capture)
