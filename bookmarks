@@ -2,7 +2,17 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-refile-last-stored"
+(("init.el"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . "\n;; (require 'he")
+ (rear-context-string . "il mastered IDO.")
+ (position . 5102))
+("emacs.org"
+ (filename . "~/Documents/orgmode/software/emacs.org")
+ (front-context-string . "* Functions\n** b")
+ (rear-context-string . "resh-contents.\n\n")
+ (position . 2081))
+("org-refile-last-stored"
  (filename . "~/Desktop/lightingList.org")
  (front-context-string . "** (6) cubetaps\n")
  (rear-context-string . "nk of trickline\n")

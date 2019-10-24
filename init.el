@@ -37,7 +37,7 @@
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
+    (slime helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 
@@ -155,10 +155,22 @@ There are two things you can do about this warning:
 (setq ido-enable-flex-matching t)
 
 ;; Set default folder for orgmode capture.
-(setq org-default-notes-file (concat org-directory "~/orgmode/notes.org"))
+(setq org-default-notes-file "~/orgmode/notes.org")
 
 ;; Set default file for orgmode diary.
 (setq diary-file "~/orgmode/diary")
 
 ;; Bind org-capture to easy shortcut. C-c c is recommended by manual.
 (global-set-key (kbd "C-c c") 'org-capture)
+
+;; Lisp setup
+(use-package slime
+  :ensure t)
+(setq inferior-lisp-program "/usr/local/Cellar/sbcl/1.5.7_1/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
+
+;; Magit setup
+(use-package magit
+  :ensure t
+  :bind (("C-x g" . magit-status)))
+
