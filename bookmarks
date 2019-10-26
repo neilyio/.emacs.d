@@ -2,7 +2,37 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("init.el"
+(("wins.org"
+ (filename . "~/Documents/orgmode/wins.org")
+ (front-context-string . "* <2019-10-12 Sa")
+ (rear-context-string)
+ (position . 1))
+("anki.org"
+ (filename . "~/Documents/orgmode/anki.org")
+ (front-context-string . "* Alonzo Church\n")
+ (rear-context-string)
+ (position . 1))
+("blackboxthinking.org"
+ (filename . "~/Documents/orgmode/reading/blackboxthinking.org")
+ (front-context-string . "* Closed Loops\n-")
+ (rear-context-string)
+ (position . 1))
+("meThemeFile"
+ (filename . "~/Documents/GitHub/me-site/src/theme/index.js")
+ (front-context-string . "        lineHeig")
+ (rear-context-string . "Size: \"2.75em\",\n")
+ (position . 2060))
+("index.jsx"
+ (filename . "~/Documents/GitHub/me-site/src/pages/index.jsx")
+ (front-context-string . "import React fro")
+ (rear-context-string)
+ (position . 1))
+("gentlesymboliclisp.org"
+ (filename . "~/Documents/orgmode/reading/gentlesymboliclisp.org")
+ (front-context-string . "Common Lisp: A G")
+ (rear-context-string)
+ (position . 1))
+("init.el"
  (filename . "~/.emacs.d/init.el")
  (front-context-string . "\n;; (require 'he")
  (rear-context-string . "il mastered IDO.")
@@ -13,8 +43,8 @@
  (rear-context-string . "resh-contents.\n\n")
  (position . 2081))
 ("org-refile-last-stored"
- (filename . "~/Desktop/lightingList.org")
- (front-context-string . "** (6) cubetaps\n")
- (rear-context-string . "nk of trickline\n")
- (position . 780))
+ (filename . "~/Documents/orgmode/software/helm.org")
+ (front-context-string . "*** C-x c c C-c ")
+ (rear-context-string . " occur patterns\n")
+ (position . 729))
 )

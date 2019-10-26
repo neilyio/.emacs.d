@@ -37,7 +37,7 @@
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (slime helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
+    (buffer-move counsel swiper slime helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 
@@ -146,8 +146,54 @@ There are two things you can do about this warning:
 (setq auto-save-file-name-transforms `((".*" ,autosave-dir t)))
 
 ;; Helm things, disabled until mastered IDO.
-;; (require 'helm-config)
+;; (global-set-key (kbd "M-x") #'helm-M-x)
+;; (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
+;; (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+;; (global-set-key (kbd "C-c h x") 'helm-register)
+
+;; (use-package helm
+;;   :ensure t
+;;   :bind (
+;; 	 :map helm-command-map
+;; 	      ("b" . helm-buffers-list)
+;; 	      ("f" . helm-find-files)
+;; 	      ("m" . helm-mini)
+;; 	      ("o" . helm-imenu)))
+
 ;; (helm-mode 1)
+
+;; Ivy and Counsel
+(use-package swiper
+  :ensure t
+  :config
+  (global-set-key "\C-s" 'swiper))
+
+(use-package counsel
+  :ensure t
+  :config
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "C-c g") 'counsel-git)
+  (global-set-key (kbd "C-c j") 'counsel-git-grep)
+  (global-set-key (kbd "C-c a") 'counsel-ag)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+
+(use-package ivy
+  :ensure t
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "<f6>") 'ivy-resume))
+
 
 ;; Ido mode
 (ido-mode 1)
@@ -174,3 +220,19 @@ There are two things you can do about this warning:
   :ensure t
   :bind (("C-x g" . magit-status)))
 
+;; Org refile setup
+(setq org-refile-targets '((nil :maxlevel . 9)
+                                (org-agenda-files :maxlevel . 9)))
+
+(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+(setq org-refile-use-outline-path t)                  ; Show full paths for refiling
+
+;; Set install buffer-move and bindings
+(use-package buffer-move
+  :ensure t
+  :bind (("<C-S-up>" . buf-move-up)
+	 ("<C-S-down>" . buf-move-down)
+	 ("<C-S-left>" . buf-move-left)
+	 ("<C-S-right>" . buf-move-right)))
+
+(setq buffer-move-stay-after-swap t)
