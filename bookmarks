@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("wins.org"
+(("gatsby-config.js"
+ (filename . "~/Documents/GitHub/me-site/gatsby-config.js")
+ (front-context-string . "module.exports =")
+ (rear-context-string)
+ (position . 1))
+("wins.org"
  (filename . "~/Documents/orgmode/wins.org")
  (front-context-string . "* <2019-10-12 Sa")
  (rear-context-string)

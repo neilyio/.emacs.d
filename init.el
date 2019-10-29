@@ -37,7 +37,7 @@
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (buffer-move counsel swiper slime helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
+    (ace-window fountain-mode powerthesaurus buffer-move counsel swiper slime helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 
@@ -196,9 +196,13 @@ There are two things you can do about this warning:
 
 
 ;; Ido mode
-(ido-mode 1)
-(setq ido-everywhere t)
-(setq ido-enable-flex-matching t)
+;;(ido-mode 1)
+;;(setq ido-everywhere t)
+;;(setq ido-enable-flex-matching t)
+
+;;; Recommended shortcuts for storing org links.
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c C-l") 'org-insert-link)
 
 ;; Set default folder for orgmode capture.
 (setq org-default-notes-file "~/orgmode/notes.org")
@@ -227,12 +231,19 @@ There are two things you can do about this warning:
 (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
 (setq org-refile-use-outline-path t)                  ; Show full paths for refiling
 
-;; Set install buffer-move and bindings
-(use-package buffer-move
+;;; Setup ace window
+;;; Note the variable aw-keys. Default was numbers, but rebinding to home row keys for ease.
+;;; Make sure not bind other ace window shortcuts to these.
+(use-package ace-window
   :ensure t
-  :bind (("<C-S-up>" . buf-move-up)
-	 ("<C-S-down>" . buf-move-down)
-	 ("<C-S-left>" . buf-move-left)
-	 ("<C-S-right>" . buf-move-right)))
+  :bind ("M-o" . ace-window)
+  :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
-(setq buffer-move-stay-after-swap t)
+;; Set up power thesaurus
+(use-package powerthesaurus
+  :ensure t
+  :bind (("C-|" . powerthesaurus-lookup-word-at-point)))
+
+;;; Get fountain mode for screenplays
+(use-package fountain-mode
+  :ensure t)
