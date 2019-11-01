@@ -33,11 +33,12 @@
  '(custom-safe-themes
    (quote
     ("c968804189e0fc963c641f5c9ad64bca431d41af2fb7e1d01a2a6666376f819c" "8543b328ed10bc7c16a8a35c523699befac0de00753824d7e90148bca583f986" default)))
+ '(dap-ui-mode t nil (dap-ui))
  '(electric-indent-mode nil)
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (ace-window fountain-mode powerthesaurus buffer-move counsel swiper slime helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
+    (hydra dap-chrome dap-mode ace-window fountain-mode powerthesaurus buffer-move counsel swiper slime helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 
@@ -116,7 +117,10 @@ There are two things you can do about this warning:
 ;; Add hooks for each language.
 (use-package lsp-mode
   :hook (prog-mode . lsp-deferred)
-  :commands lsp lsp-deferred)
+  :commands lsp)
+
+;; Turns off flycheck icons in left fringe, which overlap breakpoints icons. Moves to right fringe.
+(setq flycheck-indication-mode 'right-fringe)
 
 (setq lsp-prefer-flymake nil)
 
@@ -247,3 +251,24 @@ There are two things you can do about this warning:
 ;;; Get fountain mode for screenplays
 (use-package fountain-mode
   :ensure t)
+
+;;; Use dap-mode debugging package
+(use-package dap-mode
+  :ensure t)
+
+(dap-mode 1)
+(dap-ui-mode 1)
+;; enables mouse hover support
+(dap-tooltip-mode 1)
+;; use tooltips for mouse hover
+;; if it is not enabled `dap-mode' will use the minibuffer.
+;; (tooltip-mode 1)
+;; Call dap-chrome-setup manually to download and extract VSCode Chrome Debug Extension. 
+;; dap-debug to start
+(require 'dap-chrome)
+
+;;; Use hydra
+(use-package hydra
+  :ensure t)
+
+(global-set-key (kbd "C-c d") 'dap-hydra)

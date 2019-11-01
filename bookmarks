@@ -2,7 +2,22 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("gatsby-config.js"
+(("natureofcode.org"
+ (filename . "~/Documents/orgmode/reading/natureofcode.org")
+ (front-context-string . "* P5js\n** P5js v")
+ (rear-context-string)
+ (position . 1))
+("winning.org"
+ (filename . "~/Documents/orgmode/reading/winning.org")
+ (front-context-string)
+ (rear-context-string . "By: Jack Welch\n\n")
+ (position . 25))
+("orgmode.org"
+ (filename . "~/Documents/orgmode/software/orgmode.org")
+ (front-context-string . "#+TAGS: TAGGING(")
+ (rear-context-string)
+ (position . 1))
+("gatsby-config.js"
  (filename . "~/Documents/GitHub/me-site/gatsby-config.js")
  (front-context-string . "module.exports =")
  (rear-context-string)
