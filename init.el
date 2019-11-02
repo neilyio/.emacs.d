@@ -1,274 +1,189 @@
-;; Turn on/f debug mode right away.
-(setq debug-on-error nil)
+;;; init.el --- Load the full configuration -*- lexical-binding: t -*-
+;;; Commentary:
 
-;; Get USE-PACKAGE going right away.
-(require 'package)
-(setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
-(package-initialize)
+;; This file bootstraps the configuration, which is divided into
+;; a number of other files.
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;;; Code:
 
-;; No Eldoc, it was causing performance problems.
-(global-eldoc-mode -1)
+;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
+;;(setq debug-on-error t)
 
-(eval-when-compile
-  (require 'use-package))
+(let ((minver "24.4"))
+  (when (version< emacs-version minver)
+    (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
+(when (version< emacs-version "25.1")
+  (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
 
-;; Key re-bindings
-;; Give imenu a shortcut.
-;; This nukes tab-to-tab-stop, which you'll never ever use.
-(global-set-key (kbd "M-i") 'imenu)
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(require 'init-benchmarking) ;; Measure startup time
 
-;; Emacs full screen on startup.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("c968804189e0fc963c641f5c9ad64bca431d41af2fb7e1d01a2a6666376f819c" "8543b328ed10bc7c16a8a35c523699befac0de00753824d7e90148bca583f986" default)))
- '(dap-ui-mode t nil (dap-ui))
- '(electric-indent-mode nil)
- '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(package-selected-packages
-   (quote
-    (hydra dap-chrome dap-mode ace-window fountain-mode powerthesaurus buffer-move counsel swiper slime helm-config helm adaptive-wrap visual-fill-column gruvbox-theme lsp-mode company-lsp lsp-ui tide rjsx-mode exec-path-from-shell ## magit base16-theme web-mode)))
- '(scroll-bar-mode nil)
- '(tool-bar-mode nil))
+(defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
+(defconst *is-a-mac* (eq system-type 'darwin))
 
-;; move cursor by camelCase
-(global-subword-mode 1)
-;; 1 for on, 0 for off
+;;----------------------------------------------------------------------------
+;; Adjust garbage collection thresholds during startup, and thereafter
+;;----------------------------------------------------------------------------
+(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      (init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
-;; Don't truncate lines, make them wrap.
-(setq truncate-lines nil)
+;;----------------------------------------------------------------------------
+;; Bootstrap config
+;;----------------------------------------------------------------------------
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(require 'init-utils)
+(require 'init-site-lisp) ;; Must come before elpa, as it may provide package.el
+;; Calls (package-initialize)
+(require 'init-elpa)      ;; Machinery for installing required packages
+(require 'init-exec-path) ;; Set up $PATH
 
-;; No welcome screen.
-(setq inhibit-startup-screen t)
+;;----------------------------------------------------------------------------
+;; Allow users to provide an optional "init-preload-local.el"
+;;----------------------------------------------------------------------------
+(require 'init-preload-local nil t)
 
+;;----------------------------------------------------------------------------
+;; Load configs for specific features and modes
+;;----------------------------------------------------------------------------
 
-;; Show matching parenthesis.
-(show-paren-mode 1)
+(require-package 'diminish)
+(maybe-require-package 'scratch)
+(require-package 'command-log-mode)
 
-;; MELPA setup here.
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (when no-ssl
-    (warn "\
-Your version of Emacs does not support SSL connections,
-which is unsafe because it allows man-in-the-middle attacks.
-There are two things you can do about this warning:
-1. Install an Emacs version that does support SSL and be safe.
-2. Remove this warning from your init file so you won't see it again."))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
-(package-initialize)
+(require 'init-frame-hooks)
+(require 'init-xterm)
+(require 'init-themes)
+(require 'init-osx-keys)
+(require 'init-gui-frames)
+(require 'init-dired)
+(require 'init-isearch)
+(require 'init-grep)
+(require 'init-uniquify)
+(require 'init-ibuffer)
+(require 'init-flycheck)
 
-;; Load Theme
-(use-package gruvbox-theme
-  :ensure t
-  :config
-  (load-theme 'gruvbox-light-soft t))
+(require 'init-recentf)
+(require 'init-smex)
+(require 'init-ivy)
+;;(require 'init-helm)
+(require 'init-hippie-expand)
+(require 'init-company)
+(require 'init-windows)
+(require 'init-sessions)
+(require 'init-mmm)
 
-;; No scroll bar #HARDCORE MODE
-(setq scroll-bar-mode nil)
-;; No tool bar #HARDCORE MODE
-(setq tool-bar-mode nil)
-;; As suggested by magit, bind this key because you'll use it constantly.
-(global-set-key (kbd "C-x g") 'magit-status)
-;; No audible sound on Emacs errors. Just flash the mode bar instead.
-(setq visible-bell nil
-      ring-bell-function 'flash-mode-line)
-(defun flash-mode-line ()
-  (invert-face 'mode-line)
-  (run-with-timer 0.1 nil #'invert-face 'mode-line))(setq visible-bell 1)
+(require 'init-editing-utils)
+(require 'init-whitespace)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(require 'init-vc)
+(require 'init-darcs)
+(require 'init-git)
+(require 'init-github)
 
-;; Make emacs use the regular terminal PATH on startup.
-(when (memq window-system '(mac ns))
-  (setenv "SHELL" "/bin/zsh")
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-envs
-   '("PATH")))
+(require 'init-projectile)
 
-;; INIDUM setup
-;;(use-package indium
-;;  :hook (js-mode indium-interaction-mode))
+(require 'init-compile)
+;;(require 'init-crontab)
+(require 'init-textile)
+(require 'init-markdown)
+(require 'init-csv)
+(require 'init-erlang)
+(require 'init-javascript)
+(require 'init-php)
+(require 'init-org)
+(require 'init-nxml)
+(require 'init-html)
+(require 'init-css)
+(require 'init-haml)
+(require 'init-http)
+(require 'init-python)
+(require 'init-haskell)
+(require 'init-elm)
+(require 'init-purescript)
+(require 'init-ruby)
+(require 'init-rails)
+(require 'init-sql)
+(require 'init-rust)
+(require 'init-toml)
+(require 'init-yaml)
+(require 'init-docker)
+(require 'init-terraform)
+;;(require 'init-nix)
+(maybe-require-package 'nginx-mode)
 
-;; LSP-mode setup.
-;; Add hooks for each language.
-(use-package lsp-mode
-  :hook (prog-mode . lsp-deferred)
-  :commands lsp)
+(require 'init-paredit)
+(require 'init-lisp)
+(require 'init-slime)
+(require 'init-clojure)
+(require 'init-clojure-cider)
+(require 'init-common-lisp)
 
-;; Turns off flycheck icons in left fringe, which overlap breakpoints icons. Moves to right fringe.
-(setq flycheck-indication-mode 'right-fringe)
+(when *spell-check-support-enabled*
+  (require 'init-spelling))
 
-(setq lsp-prefer-flymake nil)
+(require 'init-misc)
 
-(use-package lsp-ui :commands lsp-ui-mode)
+(require 'init-folding)
+(require 'init-dash)
 
-(use-package company-lsp :commands company-lsp)
+;;(require 'init-twitter)
+;; (require 'init-mu)
+(require 'init-ledger)
+;; Extra packages which don't require any configuration
 
-(use-package yasnippet :ensure t)
+(require-package 'gnuplot)
+(require-package 'lua-mode)
+(require-package 'htmlize)
+(require-package 'dsvn)
+(when *is-a-mac*
+  (require-package 'osx-location))
+(unless (eq system-type 'windows-nt)
+  (maybe-require-package 'daemons))
+(maybe-require-package 'dotenv-mode)
 
-;; RJSX mode file registration.
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . rjsx-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+(when (maybe-require-package 'uptimes)
+  (setq-default uptimes-keep-count 200)
+  (add-hook 'after-init-hook (lambda () (require 'uptimes))))
 
-;; Toggle visual-line-mode in Org-mode so lines wrap nicely.
-(add-hook 'org-mode-hook 'visual-line-mode)
+(when (fboundp 'global-eldoc-mode)
+  (add-hook 'after-init-hook 'global-eldoc-mode))
 
-;; Clutch package that makes visual wraps align with indentation.
-(use-package adaptive-wrap
-  :ensure t
-  :hook (visual-line-mode . adaptive-wrap-prefix-mode))
+;;----------------------------------------------------------------------------
+;; Allow access from emacsclient
+;;----------------------------------------------------------------------------
+(add-hook 'after-init-hook
+          (lambda ()
+            (require 'server)
+            (unless (server-running-p)
+              (server-start))))
 
-;; Send all the auto-save files to their own directory.
-(defvar backup-dir (expand-file-name "~/.emacs.d/backup/"))
-(defvar autosave-dir (expand-file-name "~/.emacs.d/autosave/"))
-(setq backup-directory-alist (list (cons ".*" backup-dir)))
-(setq auto-save-list-file-prefix autosave-dir)
-(setq auto-save-file-name-transforms `((".*" ,autosave-dir t)))
-
-;; Helm things, disabled until mastered IDO.
-;; (global-set-key (kbd "M-x") #'helm-M-x)
-;; (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-;; (global-set-key (kbd "C-x C-f") #'helm-find-files)
-;; (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-;; (global-set-key (kbd "C-c h x") 'helm-register)
-
-;; (use-package helm
-;;   :ensure t
-;;   :bind (
-;; 	 :map helm-command-map
-;; 	      ("b" . helm-buffers-list)
-;; 	      ("f" . helm-find-files)
-;; 	      ("m" . helm-mini)
-;; 	      ("o" . helm-imenu)))
-
-;; (helm-mode 1)
-
-;; Ivy and Counsel
-(use-package swiper
-  :ensure t
-  :config
-  (global-set-key "\C-s" 'swiper))
-
-(use-package counsel
-  :ensure t
-  :config
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  (global-set-key (kbd "<f1> l") 'counsel-find-library)
-  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  (global-set-key (kbd "C-c g") 'counsel-git)
-  (global-set-key (kbd "C-c j") 'counsel-git-grep)
-  (global-set-key (kbd "C-c a") 'counsel-ag)
-  (global-set-key (kbd "C-x l") 'counsel-locate)
-  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
-
-(use-package ivy
-  :ensure t
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  (global-set-key (kbd "<f6>") 'ivy-resume))
+;;----------------------------------------------------------------------------
+;; Variables configured via the interactive 'customize' interface
+;;----------------------------------------------------------------------------
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 
-;; Ido mode
-;;(ido-mode 1)
-;;(setq ido-everywhere t)
-;;(setq ido-enable-flex-matching t)
+;;----------------------------------------------------------------------------
+;; Locales (setting them earlier in this file doesn't work in X)
+;;----------------------------------------------------------------------------
+(require 'init-locales)
 
-;;; Recommended shortcuts for storing org links.
-(global-set-key (kbd "C-c l") 'org-store-link)
-(global-set-key (kbd "C-c C-l") 'org-insert-link)
 
-;; Set default folder for orgmode capture.
-(setq org-default-notes-file "~/orgmode/notes.org")
+;;----------------------------------------------------------------------------
+;; Allow users to provide an optional "init-local" containing personal settings
+;;----------------------------------------------------------------------------
+(require 'init-local nil t)
 
-;; Set default file for orgmode diary.
-(setq diary-file "~/orgmode/diary")
 
-;; Bind org-capture to easy shortcut. C-c c is recommended by manual.
-(global-set-key (kbd "C-c c") 'org-capture)
 
-;; Lisp setup
-(use-package slime
-  :ensure t)
-(setq inferior-lisp-program "/usr/local/Cellar/sbcl/1.5.7_1/bin/sbcl")
-(setq slime-contribs '(slime-fancy))
+(provide 'init)
 
-;; Magit setup
-(use-package magit
-  :ensure t
-  :bind (("C-x g" . magit-status)))
-
-;; Org refile setup
-(setq org-refile-targets '((nil :maxlevel . 9)
-                                (org-agenda-files :maxlevel . 9)))
-
-(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-(setq org-refile-use-outline-path t)                  ; Show full paths for refiling
-
-;;; Setup ace window
-;;; Note the variable aw-keys. Default was numbers, but rebinding to home row keys for ease.
-;;; Make sure not bind other ace window shortcuts to these.
-(use-package ace-window
-  :ensure t
-  :bind ("M-o" . ace-window)
-  :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
-
-;; Set up power thesaurus
-(use-package powerthesaurus
-  :ensure t
-  :bind (("C-|" . powerthesaurus-lookup-word-at-point)))
-
-;;; Get fountain mode for screenplays
-(use-package fountain-mode
-  :ensure t)
-
-;;; Use dap-mode debugging package
-(use-package dap-mode
-  :ensure t)
-
-(dap-mode 1)
-(dap-ui-mode 1)
-;; enables mouse hover support
-(dap-tooltip-mode 1)
-;; use tooltips for mouse hover
-;; if it is not enabled `dap-mode' will use the minibuffer.
-;; (tooltip-mode 1)
-;; Call dap-chrome-setup manually to download and extract VSCode Chrome Debug Extension. 
-;; dap-debug to start
-(require 'dap-chrome)
-
-;;; Use hydra
-(use-package hydra
-  :ensure t)
-
-(global-set-key (kbd "C-c d") 'dap-hydra)
+;; Local Variables:
+;; coding: utf-8
+;; no-byte-compile: t
+;; End:
+;;; init.el ends here
