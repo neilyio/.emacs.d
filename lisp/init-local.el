@@ -7,5 +7,7 @@
 (setq mac-command-modifier nil)
 (setq mac-option-modifier 'meta)
 
+(load-theme 'sanityinc-tomorrow-day t)
+
 (provide 'init-local)
 ;;; init-local.el ends here
