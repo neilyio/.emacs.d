@@ -9,5 +9,8 @@
 
 (load-theme `sanityinc-tomorrow-day t)
 
+;;; Send all auto-saves to one directory.
+(setq backup-directory-alist '(("." . "~//.saves")))
+
 (provide 'init-local)
 ;;; init-local.el ends here
