@@ -12,5 +12,8 @@
 ;;; Send all auto-saves to one directory.
 (setq backup-directory-alist '(("." . "~//.saves")))
 
+;;; In Orgmode, don't allow accidental editing of a collapsed section.
+(setq org-catch-invisible-edits 'error)
+
 (provide 'init-local)
 ;;; init-local.el ends here
