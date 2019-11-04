@@ -16,4 +16,8 @@
 (setq org-catch-invisible-edits 'error)
 
 (provide 'init-local)
+
+;;; CUA mode is super annoying. Turn it off.
+(cua-selection-mode nil)
+
 ;;; init-local.el ends here
