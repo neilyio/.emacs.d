@@ -7,6 +7,7 @@
 (setq mac-command-modifier nil)
 (setq mac-option-modifier 'meta)
 
+;;; Load preferred theme here.
 (load-theme `sanityinc-tomorrow-day t)
 
 ;;; Send all auto-saves to one directory.
