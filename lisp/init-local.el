@@ -16,6 +16,13 @@
 ;;; In Orgmode, don't allow accidental editing of a collapsed section.
 (setq org-catch-invisible-edits 'error)
 
+;;; Visual-line-mode should be on any time orgmode is on so lines wrap nicely.
+(add-hook 'org-mode-hook 'visual-line-mode)
+
+;;; This mode lines up the line wrap with the proper indentation.
+;;; Note that you have to package-install adaptive-wrap for this hook to work.
+(add-hook 'visual-line-mode 'adaptive-wrap-prefix-mode)
+
 ;;; CUA mode is super annoying. Turn it off.
 (cua-selection-mode nil)
 
