@@ -19,12 +19,16 @@
 ;;; Visual-line-mode should be on any time orgmode is on so lines wrap nicely.
 (add-hook 'org-mode-hook 'visual-line-mode)
 
+;;; Turn off paredit in orgmode. The behavior was annoying.
+(add-hook 'org-mode-hook (lambda () (paredit-mode -1)))
+
 ;;; This mode lines up the line wrap with the proper indentation.
 ;;; Note that you have to package-install adaptive-wrap for this hook to work.
 (add-hook 'visual-line-mode 'adaptive-wrap-prefix-mode)
 
 ;;; CUA mode is super annoying. Turn it off.
-(cua-selection-mode nil)
+(cua-selection-mode -1)
+(cua-mode -1)
 
 (provide 'init-local)
 ;;; init-local.el ends here
