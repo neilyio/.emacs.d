@@ -1,11 +1,11 @@
 ;;; init-local.el --- Custom User Settings -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
-(when (eq system-type 'darwin)
-  (setq mac-option-key-is-meta t)
-  (setq mac-command-key-is-meta nil)
-  (setq mac-command-modifier nil)
-  (setq mac-option-modifier 'meta))
+;; (when (eq system-type 'darwin)
+;;   (setq mac-option-key-is-meta t)
+;;   (setq mac-command-key-is-meta nil)
+;;   (setq mac-command-modifier nil)
+;;   (setq mac-option-modifier 'meta))
 
 ;;; Load preferred theme here.
 (load-theme `sanityinc-tomorrow-day t)
