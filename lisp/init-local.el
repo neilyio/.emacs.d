@@ -7,6 +7,10 @@
 ;;   (setq mac-command-modifier nil)
 ;;   (setq mac-option-modifier 'meta))
 
+;;; On Windows, C-z minimizes the widow thanks to init-gui-frames.el.
+;;; Stop this madness.
+(global-set-key (kbd "C-z") nil)
+
 ;;; Load preferred theme here.
 (load-theme `sanityinc-tomorrow-day t)
 
