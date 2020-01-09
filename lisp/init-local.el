@@ -12,7 +12,7 @@
 (global-set-key (kbd "C-z") nil)
 
 ;;; Load preferred theme here.
-(load-theme `sanityinc-tomorrow-day t)
+(load-theme `sanityinc-tomorrow-night t)
 
 ;;; Send all auto-saves to one directory.
 (setq backup-directory-alist '(("." . "~//.saves")))
@@ -33,6 +33,13 @@
 ;;; CUA mode is super annoying. Turn it off.
 (cua-selection-mode -1)
 (cua-mode -1)
+
+;;; Create a binding for pop-to-mark-command, which Ivy forwards to counsel-mark-ring.
+(global-set-key (kbd "M-g SPC") #'pop-to-mark-command)
+
+;;; Remove trailing whitespace on every save.
+;;; Found at https://www.emacswiki.org/emacs/DeletingWhitespacen
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (provide 'init-local)
 ;;; init-local.el ends here
