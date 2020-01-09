@@ -7,8 +7,12 @@
 ;;   (setq mac-command-modifier nil)
 ;;   (setq mac-option-modifier 'meta))
 
+;;; On Windows, C-z minimizes the widow thanks to init-gui-frames.el.
+;;; Stop this madness.
+(global-set-key (kbd "C-z") nil)
+
 ;;; Load preferred theme here.
-(load-theme `sanityinc-tomorrow-day t)
+(load-theme `sanityinc-tomorrow-night t)
 
 ;;; Send all auto-saves to one directory.
 (setq backup-directory-alist '(("." . "~//.saves")))
@@ -35,6 +39,9 @@
 (require 'olivetti)
 (add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
 
+;;; Create a binding for pop-to-mark-command, which Ivy forwards to counsel-mark-ring.
+(global-set-key (kbd "M-g SPC") #'pop-to-mark-command)
+
 ;; LSP-mode things.
 (require 'lsp-mode)
 (add-hook 'python-mode-hook #'lsp #'flycheck-mode)
@@ -47,6 +54,10 @@
 
 (require 'lsp-ui)
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
+;;; Remove trailing whitespace on every save.
+;;; Found at https://www.emacswiki.org/emacs/DeletingWhitespacen
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (provide 'init-local)
 ;;; init-local.el ends here
