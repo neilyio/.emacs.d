@@ -30,5 +30,23 @@
 (cua-selection-mode -1)
 (cua-mode -1)
 
+;; Fountain mode /Olivetti for screenwriting
+(require 'fountain-mode)
+(require 'olivetti)
+(add-hook 'fountain-mode-hook 'turn-on-olivetti-mode)
+
+;; LSP-mode things.
+(require 'lsp-mode)
+(add-hook 'python-mode-hook #'lsp #'flycheck-mode)
+(add-hook 'js-mode-hook #'lsp  #'flycheck-mode)
+(add-hook 'js-jsx-mode-hook #'lsp  #'flycheck-mode)
+
+(require 'company-lsp)
+(push 'company-lsp company-backends)
+(setq lsp-prefer-flymake nil)
+
+(require 'lsp-ui)
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
 (provide 'init-local)
 ;;; init-local.el ends here
