@@ -53,7 +53,12 @@
 (setq lsp-prefer-flymake nil)
 
 (require 'lsp-ui)
-(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
+;; Plugin for Styled Components.
+(setq lsp-clients-typescript-log-verbosity "debug"
+      lsp-clients-typescript-plugins
+      (vector
+       (list :name "typescript-styled-plugin")))
 
 ;;; Remove trailing whitespace on every save.
 ;;; Found at https://www.emacswiki.org/emacs/DeletingWhitespacen
