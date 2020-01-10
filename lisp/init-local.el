@@ -25,6 +25,8 @@
 
 ;;; Turn off paredit in orgmode. The behavior was annoying.
 (add-hook 'org-mode-hook (lambda () (paredit-mode -1)))
+;;; The binding for paredit-newline won't go away on its own, so manually override.
+(define-key org-mode-map (kbd "RET") 'org-return-indent)
 
 ;;; This mode lines up the line wrap with the proper indentation.
 ;;; Note that you have to package-install adaptive-wrap for this hook to work.
