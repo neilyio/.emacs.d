@@ -28,6 +28,9 @@
 ;;; The binding for paredit-newline won't go away on its own, so manually override.
 (define-key org-mode-map (kbd "RET") 'org-return-indent)
 
+;;; Don't prettify symbols. Just show me my text.
+(global-prettify-symbols-mode -1)
+
 ;;; This mode lines up the line wrap with the proper indentation.
 ;;; Note that you have to package-install adaptive-wrap for this hook to work.
 (add-hook 'visual-line-mode 'adaptive-wrap-prefix-mode)
