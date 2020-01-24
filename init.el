@@ -238,6 +238,11 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 ;;; Use command as meta on mac.
 (setq mac-command-modifier 'meta)
 
+;;; Org-mode preferences
+(with-eval-after-load 'org
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'org-mode-hook 'visual-line-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Neil edits ends here
 
