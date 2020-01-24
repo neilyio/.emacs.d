@@ -227,5 +227,19 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 (require 'init-zone)
 
 (provide 'init)
+
+;;; Neil edits here
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; On Windows, C-z minimizes the widow thanks to init-gui-frames.el.
+;;; Stop this madness.
+(global-set-key (kbd "C-z") nil)
+
+;;; Use command as meta on mac.
+(setq mac-command-modifier 'meta)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Neil edits ends here
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
