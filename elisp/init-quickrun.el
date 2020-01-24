@@ -1,23 +1,22 @@
-;;; early-init.el --- -*- lexical-binding: t -*-
+;;; init-quickrun.el --- -*- lexical-binding: t -*-
 ;;
-;; Filename: early-init.el
-;; Description: Early initialization
+;; Filename: init-quickrun.el
+;; Description: Initialize quickrun
 ;; Author: Mingde (Matthew) Zeng
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
-;; Created: Sun Jun  9 17:58:05 2019 (-0400)
+;; Created: Sun Jul  7 16:32:16 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Tue Sep 17 01:13:45 2019 (-0400)
+;; Last-Updated: Thu Aug  8 16:07:44 2019 (-0400)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
-;; Keywords: M-EMACS .emacs.d init early-init
-;; Compatibility: emacs-version >= 27
+;; Keywords: M-EMACS .emacs.d init
+;; Compatibility: emacs-version >= 26.1
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
 ;;
-;; Emacs27 introduces early-init.el, which is run before init.el,
-;; before package and UI initialization happens.
+;; This initializes quickrun
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -38,31 +37,13 @@
 ;;
 ;;; Code:
 
-;; DeferGC
-(setq gc-cons-threshold 100000000)
-;; -DeferGC
+;; QuickrunPac
+(use-package quickrun
+  :bind
+  (("<f5>" . quickrun)
+   ("M-<f5>" . quickrun-shell)))
+;; -QuickrunPac
 
-;; UnsetPES
-(setq package-enable-at-startup nil)
-;; -UnsetPES
-
-;; UnsetFNHA
-(defvar file-name-handler-alist-original file-name-handler-alist)
-(setq file-name-handler-alist nil)
-;; -UnsetFNHA
-
-;; UnsetSRF
-(setq site-run-file nil)
-;; -UnsetSRF
-
-;; DisableUnnecessaryInterface
-(menu-bar-mode -1)
-(unless (and (display-graphic-p) (eq system-type 'darwin))
-  (push '(menu-bar-lines . 0) default-frame-alist))
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-;; -DisableUnnecessaryInterface
-
-(provide 'early-init)
+(provide 'init-quickrun)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; early-init.el ends here
+;;; init-quickrun.el ends here

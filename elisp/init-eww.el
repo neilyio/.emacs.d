@@ -1,23 +1,22 @@
-;;; early-init.el --- -*- lexical-binding: t -*-
+;;; init-eww.el --- -*- lexical-binding: t -*-
 ;;
-;; Filename: early-init.el
-;; Description: Early initialization
+;; Filename: init-eww.el
+;; Description: Configure Eww
 ;; Author: Mingde (Matthew) Zeng
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
-;; Created: Sun Jun  9 17:58:05 2019 (-0400)
+;; Created: Fri Mar 15 11:13:42 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Tue Sep 17 01:13:45 2019 (-0400)
+;; Last-Updated: Tue Dec 24 12:18:07 2019 (-0500)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
-;; Keywords: M-EMACS .emacs.d init early-init
-;; Compatibility: emacs-version >= 27
+;; Keywords: M-EMACS .emacs.d eww
+;; Compatibility: emacs-version >= 26.1
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
 ;;
-;; Emacs27 introduces early-init.el, which is run before init.el,
-;; before package and UI initialization happens.
+;; This initializes eww
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -38,31 +37,22 @@
 ;;
 ;;; Code:
 
-;; DeferGC
-(setq gc-cons-threshold 100000000)
-;; -DeferGC
+(eval-when-compile
+  (require 'init-const))
 
-;; UnsetPES
-(setq package-enable-at-startup nil)
-;; -UnsetPES
+;; EWWPac
+(use-package eww
+  :ensure nil
+  :commands (eww)
+  :hook (eww-mode . (lambda ()
+                      "Rename EWW's buffer so sites open in new page."
+                      (rename-buffer "eww" t)))
+  :config
+  ;; I am using EAF-Browser instead of EWW
+  (unless *eaf-env*
+    (setq browse-url-browser-function 'eww-browse-url))) ; Hit & to browse url with system browser
+;; -EWWPac
 
-;; UnsetFNHA
-(defvar file-name-handler-alist-original file-name-handler-alist)
-(setq file-name-handler-alist nil)
-;; -UnsetFNHA
-
-;; UnsetSRF
-(setq site-run-file nil)
-;; -UnsetSRF
-
-;; DisableUnnecessaryInterface
-(menu-bar-mode -1)
-(unless (and (display-graphic-p) (eq system-type 'darwin))
-  (push '(menu-bar-lines . 0) default-frame-alist))
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-;; -DisableUnnecessaryInterface
-
-(provide 'early-init)
+(provide 'init-eww)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; early-init.el ends here
+;;; init-eww.el ends here

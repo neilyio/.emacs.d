@@ -1,23 +1,22 @@
-;;; early-init.el --- -*- lexical-binding: t -*-
+;;; init-pyim.el --- -*- lexical-binding: t -*-
 ;;
-;; Filename: early-init.el
-;; Description: Early initialization
+;; Filename: init-pyim.el
+;; Description: Initialize Pyim
 ;; Author: Mingde (Matthew) Zeng
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
-;; Created: Sun Jun  9 17:58:05 2019 (-0400)
+;; Created: Thu Jun 20 00:36:05 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Tue Sep 17 01:13:45 2019 (-0400)
+;; Last-Updated: Thu Dec 26 21:54:20 2019 (-0500)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
-;; Keywords: M-EMACS .emacs.d init early-init
-;; Compatibility: emacs-version >= 27
+;; Keywords: M-EMACS .emacs.d init
+;; Compatibility: emacs-version >= 26.1
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
 ;;
-;; Emacs27 introduces early-init.el, which is run before init.el,
-;; before package and UI initialization happens.
+;; This initializes pyim
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -38,31 +37,33 @@
 ;;
 ;;; Code:
 
-;; DeferGC
-(setq gc-cons-threshold 100000000)
-;; -DeferGC
+;; PyimPac
+(use-package pyim
+  :init
+  (use-package posframe :defer t)
+  :custom
+  (default-input-method "pyim")
+  (pyim-default-scheme 'quanpin)
+  (pyim-page-tooltip 'posframe)
+  (pyim-page-length 9)
+  :config
+  (pyim-isearch-mode 1)
+  (setq-default pyim-english-input-switch-functions
+                '(pyim-probe-isearch-mode
+                  pyim-probe-org-structure-template))
+  (setq-default pyim-punctuation-half-width-functions
+                '(pyim-probe-punctuation-line-beginning
+                  pyim-probe-punctuation-after-punctuation))
+  :bind
+  ("M-j" . pyim-convert-string-at-point)) ; M-j 强制将光标前的拼音字符串转换为中文。
+;; -PyimPac
 
-;; UnsetPES
-(setq package-enable-at-startup nil)
-;; -UnsetPES
+;; PyimBaseDictPac
+(use-package pyim-basedict
+  :after pyim
+  :config (pyim-basedict-enable))
+;; -PyimBaseDictPac
 
-;; UnsetFNHA
-(defvar file-name-handler-alist-original file-name-handler-alist)
-(setq file-name-handler-alist nil)
-;; -UnsetFNHA
-
-;; UnsetSRF
-(setq site-run-file nil)
-;; -UnsetSRF
-
-;; DisableUnnecessaryInterface
-(menu-bar-mode -1)
-(unless (and (display-graphic-p) (eq system-type 'darwin))
-  (push '(menu-bar-lines . 0) default-frame-alist))
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-;; -DisableUnnecessaryInterface
-
-(provide 'early-init)
+(provide 'init-pyim)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; early-init.el ends here
+;;; init-pyim.el ends here

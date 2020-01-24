@@ -1,23 +1,22 @@
-;;; early-init.el --- -*- lexical-binding: t -*-
+;;; init-all-the-icons.el --- -*- lexical-binding: t -*-
 ;;
-;; Filename: early-init.el
-;; Description: Early initialization
+;; Filename: init-all-the-icons.el
+;; Description: Initialize All-The-Icons
 ;; Author: Mingde (Matthew) Zeng
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
-;; Created: Sun Jun  9 17:58:05 2019 (-0400)
+;; Created: Thu Mar 14 17:06:08 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Tue Sep 17 01:13:45 2019 (-0400)
+;; Last-Updated: Fri Jan 17 10:57:53 2020 (-0500)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
-;; Keywords: M-EMACS .emacs.d init early-init
-;; Compatibility: emacs-version >= 27
+;; Keywords: M-EMACS .emacs.d all-the-icons
+;; Compatibility: emacs-version >= 26.1
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
 ;;
-;; Emacs27 introduces early-init.el, which is run before init.el,
-;; before package and UI initialization happens.
+;; This initializes all-the-icons, all-the-icons-dired, all-the-icons-ivy
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -38,31 +37,23 @@
 ;;
 ;;; Code:
 
-;; DeferGC
-(setq gc-cons-threshold 100000000)
-;; -DeferGC
+(eval-when-compile
+  (require 'init-const))
 
-;; UnsetPES
-(setq package-enable-at-startup nil)
-;; -UnsetPES
+;; ATIPac
+(use-package all-the-icons :if *sys/gui*)
+;; -ATIPac
 
-;; UnsetFNHA
-(defvar file-name-handler-alist-original file-name-handler-alist)
-(setq file-name-handler-alist nil)
-;; -UnsetFNHA
+;; ATIDiredPac
+(use-package all-the-icons-dired
+  :after all-the-icons
+  :if *sys/gui*
+  :diminish
+  :custom-face
+  (all-the-icons-dired-dir-face ((t `(:foreground ,(face-background 'default)))))
+  :hook (dired-mode . all-the-icons-dired-mode))
+;; -ATIDiredPac
 
-;; UnsetSRF
-(setq site-run-file nil)
-;; -UnsetSRF
-
-;; DisableUnnecessaryInterface
-(menu-bar-mode -1)
-(unless (and (display-graphic-p) (eq system-type 'darwin))
-  (push '(menu-bar-lines . 0) default-frame-alist))
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-;; -DisableUnnecessaryInterface
-
-(provide 'early-init)
+(provide 'init-all-the-icons)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; early-init.el ends here
+;;; init-all-the-icons.el ends here

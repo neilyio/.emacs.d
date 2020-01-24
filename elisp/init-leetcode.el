@@ -1,23 +1,22 @@
-;;; early-init.el --- -*- lexical-binding: t -*-
+;;; init-leetcode.el --- -*- lexical-binding: t -*-
 ;;
-;; Filename: early-init.el
-;; Description: Early initialization
+;; Filename: init-leetcode.el
+;; Description: Initialize LeetCode Client
 ;; Author: Mingde (Matthew) Zeng
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
-;; Created: Sun Jun  9 17:58:05 2019 (-0400)
+;; Created: Thu Apr 11 22:28:41 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Tue Sep 17 01:13:45 2019 (-0400)
+;; Last-Updated: Sat Sep  7 00:52:17 2019 (-0400)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
-;; Keywords: M-EMACS .emacs.d init early-init
-;; Compatibility: emacs-version >= 27
+;; Keywords: M-EMACS .emacs.d leetcode
+;; Compatibility: emacs-version >= 26.1
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Commentary:
 ;;
-;; Emacs27 introduces early-init.el, which is run before init.el,
-;; before package and UI initialization happens.
+;; This initializes a LeetCode client
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -38,31 +37,21 @@
 ;;
 ;;; Code:
 
-;; DeferGC
-(setq gc-cons-threshold 100000000)
-;; -DeferGC
+(eval-when-compile
+  (require 'init-const))
 
-;; UnsetPES
-(setq package-enable-at-startup nil)
-;; -UnsetPES
+;; LeetCodePac
+(use-package leetcode
+  :load-path (lambda () (expand-file-name "site-elisp/leetcode.el" user-emacs-directory))
+  :commands (leetcode)
+  :init
+  (use-package graphql :defer t)
+  (use-package aio :defer t)
+  :custom
+  (url-debug t)
+  (leetcode-prefer-language "python3"))
+;; -LeetCodePac
 
-;; UnsetFNHA
-(defvar file-name-handler-alist-original file-name-handler-alist)
-(setq file-name-handler-alist nil)
-;; -UnsetFNHA
-
-;; UnsetSRF
-(setq site-run-file nil)
-;; -UnsetSRF
-
-;; DisableUnnecessaryInterface
-(menu-bar-mode -1)
-(unless (and (display-graphic-p) (eq system-type 'darwin))
-  (push '(menu-bar-lines . 0) default-frame-alist))
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-;; -DisableUnnecessaryInterface
-
-(provide 'early-init)
+(provide 'init-leetcode)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; early-init.el ends here
+;;; init-leetcode.el ends here

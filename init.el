@@ -1,189 +1,231 @@
-;;; init.el --- Load the full configuration -*- lexical-binding: t -*-
+;;; init.el --- -*- lexical-binding: t -*-
+;;
+;; Filename: init.el
+;; Description: Initialize M-EMACS
+;; Author: Mingde (Matthew) Zeng
+;; Copyright (C) 2019 Mingde (Matthew) Zeng
+;; Created: Thu Mar 14 10:15:28 2019 (-0400)
+;; Version: 2.0.0
+;; Last-Updated: Sat Jan  4 22:37:54 2020 (-0500)
+;;           By: Mingde (Matthew) Zeng
+;; URL: https://github.com/MatthewZMD/.emacs.d
+;; Keywords: M-EMACS .emacs.d init
+;; Compatibility: emacs-version >= 26.1
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;;; Commentary:
-
-;; This file bootstraps the configuration, which is divided into
-;; a number of other files.
-
+;;
+;; This is the init.el file for M-EMACS
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or (at
+;; your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;;; Code:
 
-;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
-;;(setq debug-on-error t)
+;; CheckVer
+(cond ((version< emacs-version "26.1")
+       (warn "M-EMACS requires Emacs 26.1 and above!"))
+      ((let* ((early-init-f (expand-file-name "early-init.el" user-emacs-directory))
+              (early-init-do-not-edit-d (expand-file-name "early-init-do-not-edit/" user-emacs-directory))
+              (early-init-do-not-edit-f (expand-file-name "early-init.el" early-init-do-not-edit-d)))
+         (and (version< emacs-version "27")
+              (or (not (file-exists-p early-init-do-not-edit-f))
+                  (file-newer-than-file-p early-init-f early-init-do-not-edit-f)))
+         (make-directory early-init-do-not-edit-d t)
+         (copy-file early-init-f early-init-do-not-edit-f t t t t)
+         (add-to-list 'load-path early-init-do-not-edit-d)
+         (require 'early-init))))
+;; -CheckVer
 
-(let ((minver "24.4"))
-  (when (version< emacs-version minver)
-    (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
-(when (version< emacs-version "25.1")
-  (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
+;; BetterGC
+(defvar better-gc-cons-threshold 67108864 ; 64mb
+  "The default value to use for `gc-cons-threshold'.
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(require 'init-benchmarking) ;; Measure startup time
+If you experience freezing, decrease this.  If you experience stuttering, increase this.")
 
-(defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
-(defconst *is-a-mac* (eq system-type 'darwin))
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold better-gc-cons-threshold)
+            (setq file-name-handler-alist file-name-handler-alist-original)
+            (makunbound 'file-name-handler-alist-original)))
+;; -BetterGC
 
-;;----------------------------------------------------------------------------
-;; Adjust garbage collection thresholds during startup, and thereafter
-;;----------------------------------------------------------------------------
-(let ((normal-gc-cons-threshold (* 20 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc-cons-threshold)
-  (add-hook 'emacs-startup-hook
-            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+;; AutoGC
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (if (boundp 'after-focus-change-function)
+                (add-function :after after-focus-change-function
+                              (lambda ()
+                                (unless (frame-focus-state)
+                                  (garbage-collect))))
+              (add-hook 'after-focus-change-function 'garbage-collect))
+            (defun gc-minibuffer-setup-hook ()
+              (setq gc-cons-threshold (* better-gc-cons-threshold 2)))
 
-;;----------------------------------------------------------------------------
-;; Bootstrap config
-;;----------------------------------------------------------------------------
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(require 'init-utils)
-(require 'init-site-lisp) ;; Must come before elpa, as it may provide package.el
-;; Calls (package-initialize)
-(require 'init-elpa)      ;; Machinery for installing required packages
-(require 'init-exec-path) ;; Set up $PATH
+            (defun gc-minibuffer-exit-hook ()
+              (garbage-collect)
+              (setq gc-cons-threshold better-gc-cons-threshold))
 
-;;----------------------------------------------------------------------------
-;; Allow users to provide an optional "init-preload-local.el"
-;;----------------------------------------------------------------------------
-(require 'init-preload-local nil t)
+            (add-hook 'minibuffer-setup-hook #'gc-minibuffer-setup-hook)
+            (add-hook 'minibuffer-exit-hook #'gc-minibuffer-exit-hook)))
+;; -AutoGC
 
-;;----------------------------------------------------------------------------
-;; Load configs for specific features and modes
-;;----------------------------------------------------------------------------
+;; LoadPath
+(defun update-to-load-path (folder)
+  "Update FOLDER and its subdirectories to `load-path'."
+  (let ((base folder))
+    (unless (member base load-path)
+      (add-to-list 'load-path base))
+    (dolist (f (directory-files base))
+      (let ((name (concat base "/" f)))
+        (when (and (file-directory-p name)
+                   (not (equal f ".."))
+                   (not (equal f ".")))
+          (unless (member base load-path)
+            (add-to-list 'load-path name)))))))
 
-(require-package 'diminish)
-(maybe-require-package 'scratch)
-(require-package 'command-log-mode)
+(update-to-load-path (expand-file-name "elisp" user-emacs-directory))
+;; -LoadPath
 
-(require 'init-frame-hooks)
-(require 'init-xterm)
-(require 'init-themes)
-(require 'init-osx-keys)
-(require 'init-gui-frames)
+;; Constants
+
+(require 'init-const)
+
+;; Packages
+
+;; Package Management
+(require 'init-package)
+
+;; Global Functionalities
+(require 'init-global-config)
+
+(require 'init-func)
+
+(require 'init-search)
+
+(require 'init-crux)
+
+(require 'init-avy)
+
+(require 'init-winner)
+
+(require 'init-which-key)
+
+(require 'init-popup-kill-ring)
+
+(require 'init-undo-tree)
+
+(require 'init-discover-my-major)
+
+(require 'init-ace-window)
+
+(require 'init-shell)
+
 (require 'init-dired)
-(require 'init-isearch)
-(require 'init-grep)
-(require 'init-uniquify)
-(require 'init-ibuffer)
-(require 'init-flycheck)
 
-(require 'init-recentf)
-(require 'init-smex)
-(require 'init-ivy)
-;;(require 'init-helm)
-(require 'init-hippie-expand)
-(require 'init-company)
-(require 'init-windows)
-(require 'init-sessions)
-(require 'init-mmm)
+;; User Interface Enhancements
+(require 'init-ui-config)
 
-(require 'init-editing-utils)
-(require 'init-whitespace)
+(require 'init-all-the-icons)
 
-(require 'init-vc)
-(require 'init-darcs)
-(require 'init-git)
-(require 'init-github)
+(require 'init-theme)
+
+(require 'init-dashboard)
+
+(require 'init-fonts)
+
+(require 'init-scroll)
+
+;; General Programming
+(require 'init-magit)
 
 (require 'init-projectile)
 
-(require 'init-compile)
-;;(require 'init-crontab)
-(require 'init-textile)
-(require 'init-markdown)
-(require 'init-csv)
-(require 'init-erlang)
-(require 'init-javascript)
-(require 'init-php)
-(require 'init-org)
-(require 'init-nxml)
-(require 'init-html)
-(require 'init-css)
-(require 'init-haml)
-(require 'init-http)
+(require 'init-treemacs)
+
+(require 'init-yasnippet)
+
+(require 'init-flycheck)
+
+(require 'init-dumb-jump)
+
+(require 'init-parens)
+
+(require 'init-indent)
+
+(require 'init-quickrun)
+
+(require 'init-format)
+
+(require 'init-comment)
+
+(require 'init-edit)
+
+(require 'init-header)
+
+(require 'init-ein)
+
+(require 'init-lsp)
+
+(require 'init-company)
+
+;; Programming
+
+(require 'init-java)
+
+(require 'init-cc)
+
 (require 'init-python)
+
 (require 'init-haskell)
-(require 'init-elm)
-(require 'init-purescript)
-(require 'init-ruby)
-(require 'init-rails)
-(require 'init-sql)
-(require 'init-rust)
-(require 'init-toml)
-(require 'init-yaml)
-(require 'init-docker)
-(require 'init-terraform)
-;;(require 'init-nix)
-(maybe-require-package 'nginx-mode)
 
-(require 'init-paredit)
-(require 'init-lisp)
-(require 'init-slime)
-(require 'init-clojure)
-(require 'init-clojure-cider)
-(require 'init-common-lisp)
+(require 'init-latex)
 
-(when *spell-check-support-enabled*
-  (require 'init-spelling))
+(require 'init-ess)
 
-(require 'init-misc)
+;; Web Development
+(require 'init-webdev)
 
-(require 'init-folding)
-(require 'init-dash)
+;; Miscellaneous
+(require 'init-org)
 
-;;(require 'init-twitter)
-;; (require 'init-mu)
-(require 'init-ledger)
-;; Extra packages which don't require any configuration
+(require 'init-eaf)
 
-(require-package 'gnuplot)
-(require-package 'lua-mode)
-(require-package 'htmlize)
-(require-package 'dsvn)
-(when *is-a-mac*
-  (require-package 'osx-location))
-(unless (eq system-type 'windows-nt)
-  (maybe-require-package 'daemons))
-(maybe-require-package 'dotenv-mode)
+(require 'init-erc)
 
-(when (maybe-require-package 'uptimes)
-  (setq-default uptimes-keep-count 200)
-  (add-hook 'after-init-hook (lambda () (require 'uptimes))))
+(require 'init-eww)
 
-(when (fboundp 'global-eldoc-mode)
-  (add-hook 'after-init-hook 'global-eldoc-mode))
+(require 'init-mu4e)
 
-;;----------------------------------------------------------------------------
-;; Allow access from emacsclient
-;;----------------------------------------------------------------------------
-(add-hook 'after-init-hook
-          (lambda ()
-            (require 'server)
-            (unless (server-running-p)
-              (server-start))))
+(require 'init-tramp)
 
-;;----------------------------------------------------------------------------
-;; Variables configured via the interactive 'customize' interface
-;;----------------------------------------------------------------------------
-(when (file-exists-p custom-file)
-  (load custom-file))
+(require 'init-pdf)
 
+(require 'init-leetcode)
 
-;;----------------------------------------------------------------------------
-;; Locales (setting them earlier in this file doesn't work in X)
-;;----------------------------------------------------------------------------
-(require 'init-locales)
+(require 'init-pyim)
 
+(require 'init-epaint)
 
-;;----------------------------------------------------------------------------
-;; Allow users to provide an optional "init-local" containing personal settings
-;;----------------------------------------------------------------------------
-(require 'init-local nil t)
+(require 'init-games)
 
-
+(require 'init-zone)
 
 (provide 'init)
-
-;; Local Variables:
-;; coding: utf-8
-;; no-byte-compile: t
-;; End:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
