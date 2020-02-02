@@ -1,0 +1,36 @@
+
+;; ----- amx-history -----
+(
+ occur
+ isearch-forward
+ pdf-tools-help
+ indent-for-tab-command
+ pdf-tools-install
+ avy-goto-char
+ eval-buffer
+)
+
+;; ----- amx-data -----
+(
+ (all-the-icons-install-fonts . 1)
+ (all-the-icons-insert-alltheicon . 1)
+ (org-indent-mode . 2)
+ (set-variable . 10)
+ (font-lock-mode . 14)
+ (swiper . 1)
+ (linum-mode . 2)
+ (global-linum-mode . 2)
+ (display-line-numbers-mode . 2)
+ (eval-buffer . 9)
+ (recover-this-file . 1)
+ (apropos . 1)
+ (list-coding-systems . 1)
+ (indent-for-tab-command . 5)
+ (find-function . 1)
+ (find-variable . 2)
+ (pdf-tools-install . 3)
+ (avy-goto-char . 1)
+ (pdf-tools-help . 4)
+ (occur . 3)
+ (isearch-forward . 2)
+)
