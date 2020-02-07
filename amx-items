@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
- occur
- isearch-forward
+ regexp-builder
+ query-replace-regexp
+ query-replace
+ pdf-view-mode
+ pdf-outline
+ outline-mode
  pdf-tools-help
- indent-for-tab-command
- pdf-tools-install
- avy-goto-char
- eval-buffer
 )
 
 ;; ----- amx-data -----
@@ -30,7 +30,17 @@
  (find-variable . 2)
  (pdf-tools-install . 3)
  (avy-goto-char . 1)
- (pdf-tools-help . 4)
+ (pdf-tools-help . 6)
  (occur . 3)
  (isearch-forward . 2)
+ (eshell . 1)
+ (smartparens-mode . 1)
+ (company-tabnine-install-binary . 1)
+ (sp-cheat-sheet . 1)
+ (pdf-view-mode . 2)
+ (pdf-outline . 2)
+ (outline-mode . 1)
+ (query-replace-regexp . 5)
+ (query-replace . 1)
+ (regexp-builder . 3)
 )
