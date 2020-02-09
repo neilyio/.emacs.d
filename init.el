@@ -6,7 +6,7 @@
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
 ;; Created: Thu Mar 14 10:15:28 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Tue Jan 28 16:38:48 2020 (-0800)
+;; Last-Updated: Sat Feb  8 23:54:54 2020 (-0800)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
 ;; Keywords: M-EMACS .emacs.d init
@@ -257,6 +257,11 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 (global-set-key (kbd "M-d") 'kill-word)
 (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 
+;; Some elisp keybindings that are useful
+(global-set-key (kbd "C-M-x") 'eval-defun)
+
+;; Set the tabnine idle time to something sane.
+(setq company-idle-delay 0.5)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Neil edits ends here
 

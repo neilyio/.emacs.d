@@ -54,3 +54,7 @@ site-lisp/package/
 /server/
 /.DS_Store
 .lsp-session*
+fly-check_init.network
+/speed-type
+places
+amx-items
