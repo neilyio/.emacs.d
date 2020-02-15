@@ -6,7 +6,7 @@
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
 ;; Created: Thu Mar 14 10:15:28 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Sat Feb  8 23:54:54 2020 (-0800)
+;; Last-Updated: Thu Feb 13 12:42:37 2020 (-0800)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
 ;; Keywords: M-EMACS .emacs.d init
@@ -226,11 +226,8 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 
 (require 'init-zone)
 
-(provide 'init)
-
 ;;; Neil edits here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;;; On Windows, C-z minimizes the widow thanks to init-gui-frames.el.
 ;;; Stop this madness.
 (global-set-key (kbd "C-z") nil)
@@ -262,8 +259,18 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 
 ;; Set the tabnine idle time to something sane.
 (setq company-idle-delay 0.5)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; M-Emacs remaps to save all buffers. Reclaim the default save-buffer.
+(global-set-key  (kbd "C-x C-s") 'save-buffer)
+
+;; Set Emacs to fullscreen using Frame Parameters.
+;; arg1, a frame to operate on, is nil to signify "selected frame".
+;; fullscreen is the property key, fullboth is its value (both width + height)
+(set-frame-parameter nil 'fullscreen 'fullboth)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Neil edits ends here
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init.el ends here
+
+(provide 'init)
