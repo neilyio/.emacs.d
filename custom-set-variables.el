@@ -10,7 +10,7 @@
 ;; Package-Requires: ()
 ;; Last-Updated:
 ;;           By:
-;;     Update #: 2
+;;     Update #: 3
 ;; URL:
 ;; Doc URL:
 ;; Keywords:
@@ -63,28 +63,30 @@
  '(auto-revert-use-notify nil)
  '(auto-revert-verbose nil)
  '(auto-save-default nil)
- '(avy-style 'pre t)
- '(avy-timeout-seconds 0.3 t)
+ '(avy-style (quote pre))
+ '(avy-timeout-seconds 0.3)
  '(delete-by-moving-to-trash t)
  '(dired-dwim-target t)
- '(dired-recursive-copies 'always)
- '(dired-recursive-deletes 'always)
+ '(dired-recursive-copies (quote always))
+ '(dired-recursive-deletes (quote always))
  '(global-auto-revert-non-file-buffers t)
  '(ivy-count-format "【%d/%d】")
  '(ivy-height 10)
- '(ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
+ '(ivy-magic-slash-non-match-action (quote ivy-magic-slash-non-match-create))
  '(ivy-on-del-error-function nil)
  '(ivy-use-virtual-buffers t)
  '(ivy-wrap t)
  '(load-prefer-newer t)
  '(make-backup-files nil)
- '(multi-term-program "/bin/bash" t)
+ '(multi-term-program "c:/Windows/system32/bash.exe" t)
  '(package-selected-packages
-   '(init-neil-smartparens yasnippet-snippets which-key web-mode use-package undo-tree typescript-mode treemacs-projectile treemacs-magit toc-org term-keys super-save sudo-edit speed-type smartparens shell-here quickrun pyim posframe popup-kill-ring plantuml-mode pdf-tools ox-gfm org-edit-latex mu4e-overview mu4e-alert modern-cpp-font-lock lsp-ui lsp-python-ms lsp-java json-mode js2-mode iedit htmlize highlight-indent-guides haskell-mode graphql go-mode format-all flycheck exec-path-from-shell evil-nerd-commenter ess erc-image erc-hl-nicks emmet-mode dumb-jump doom-themes doom-modeline disk-usage discover-my-major diminish dashboard dap-mode crux counsel company-tabnine company-lsp company-box ccls auto-package-update amx all-the-icons-dired aio 2048-game))
+   (quote
+    (dap-python init-neil-smartparens yasnippet-snippets which-key web-mode use-package undo-tree typescript-mode treemacs-projectile treemacs-magit toc-org term-keys super-save sudo-edit speed-type smartparens shell-here quickrun pyim posframe popup-kill-ring plantuml-mode pdf-tools ox-gfm org-edit-latex mu4e-overview mu4e-alert modern-cpp-font-lock lsp-ui lsp-python-ms lsp-java json-mode js2-mode iedit htmlize highlight-indent-guides haskell-mode graphql go-mode format-all flycheck exec-path-from-shell evil-nerd-commenter ess erc-image erc-hl-nicks emmet-mode dumb-jump doom-themes doom-modeline disk-usage discover-my-major diminish dashboard dap-mode crux counsel company-tabnine company-lsp company-box ccls auto-package-update amx all-the-icons-dired aio 2048-game)))
  '(recentf-auto-cleanup "05:00am")
  '(recentf-exclude
-   '((expand-file-name package-user-dir)
-     ".cache" ".cask" ".elfeed" "bookmarks" "cache" "ido.*" "persp-confs" "recentf" "undo-tree-hist" "url" "COMMIT_EDITMSG\\'"))
+   (quote
+    ((expand-file-name package-user-dir)
+     ".cache" ".cask" ".elfeed" "bookmarks" "cache" "ido.*" "persp-confs" "recentf" "undo-tree-hist" "url" "COMMIT_EDITMSG\\'")))
  '(recentf-max-saved-items 200)
  '(super-save-auto-save-when-idle t)
  '(undo-tree-visualizer-diff t)
@@ -92,19 +94,22 @@
  '(which-key-prefix-prefix "+")
  '(which-key-separator " ")
  '(winner-boring-buffers
-   '("*Completions*" "*Compile-Log*" "*inferior-lisp*" "*Fuzzy Completions*" "*Apropos*" "*Help*" "*cvs*" "*Buffer List*" "*Ibuffer*" "*esh command on file*")))
+   (quote
+    ("*Completions*" "*Compile-Log*" "*inferior-lisp*" "*Fuzzy Completions*" "*Apropos*" "*Help*" "*cvs*" "*Buffer List*" "*Ibuffer*" "*esh command on file*"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(all-the-icons-dired-dir-face ((t `(:foreground ,(face-background 'default)))))
+ '(all-the-icons-dired-dir-face ((t (\` (:foreground (\, (face-background (quote default))))))))
  '(avy-lead-face ((t (:background "#51afef" :foreground "#870000" :weight bold))))
  '(css-selector ((t (:inherit default :foreground "#66CCFF"))))
  '(cursor ((t (:background "BlanchedAlmond"))))
  '(dashboard-banner-logo-title ((t (:family "Love LetterTW" :height 123))))
  '(erc-notice-face ((t (:foreground "#ababab"))))
  '(font-lock-comment-face ((t (:foreground "#828282"))))
+ '(lsp-ui-doc-background ((t (:background nil))))
+ '(lsp-ui-doc-header ((t (:inherit (font-lock-string-face italic)))))
  '(snails-content-buffer-face ((t (:background "#111" :height 110))))
  '(snails-header-line-face ((t (:inherit font-lock-function-name-face :underline t :height 1.1))))
  '(snails-input-buffer-face ((t (:background "#222" :foreground "gold" :height 110)))))

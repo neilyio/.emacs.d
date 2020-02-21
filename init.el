@@ -6,7 +6,7 @@
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
 ;; Created: Thu Mar 14 10:15:28 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Thu Feb 13 12:42:37 2020 (-0800)
+;; Last-Updated: Thu Feb 20 17:09:17 2020 (-0800)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
 ;; Keywords: M-EMACS .emacs.d init
@@ -251,14 +251,29 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 (setq org-indent-mode-turns-on-hiding-stars nil)
 
 ;;; Reclaim the delete-word function that's nuked by delete-block.
+;;; This will nuke the unwrap functions in smartparens, so you'll want to add those back next.
 (global-set-key (kbd "M-d") 'kill-word)
 (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
+
+;; Find some new bindings for the smartparens unwrap functions.
+;; Also add some bindings recommended in the package author's example.
+(define-key smartparens-mode-map (kbd "M-[") 'sp-backward-unwrap-sexp)
+(define-key smartparens-mode-map (kbd "M-]") 'sp-unwrap-sexp)
+(define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+
+;; Smartparens enable in extra modes..
+;;; Don't close single quotes in these modes.
+(add-hook 'eshell-mode-hook 'smartparens-mode)
+(add-hook 'ielm-mode-hook 'smartparens-mode)
+(with-eval-after-load 'smartparens-mode
+  (sp-local-pair 'eshell "'" "'" :actions nil)
+  (sp-local-pair 'ielm "'" "'" :actions nil))
 
 ;; Some elisp keybindings that are useful
 (global-set-key (kbd "C-M-x") 'eval-defun)
 
 ;; Set the tabnine idle time to something sane.
-(setq company-idle-delay 0.5)
+(setq company-idle-delay 0.75)
 
 ;; M-Emacs remaps to save all buffers. Reclaim the default save-buffer.
 (global-set-key  (kbd "C-x C-s") 'save-buffer)
@@ -267,6 +282,36 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 ;; arg1, a frame to operate on, is nil to signify "selected frame".
 ;; fullscreen is the property key, fullboth is its value (both width + height)
 (set-frame-parameter nil 'fullscreen 'fullboth)
+
+;;; Remove the default toggle-input-method bound to an easy key to hit.
+;;; Note that backslashes automatically escape in elisp, so you have to enter it twice.
+(global-set-key (kbd "C-\\") nil)
+
+;;; Get ace-window to use keys on the home row instead of numbers.
+;;; Set ace-window to a shorter keybinding.
+(global-set-key (kbd "M-o") 'ace-window)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+
+;;; Add which-key integration so you can see key options.
+;;; Turn off some annoying lsp-documentation pop-ups.
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-render-documentation nil)
+  (add-hook 'lsp-mode-hook (lambda () (lsp-ui-doc-mode -1))))
+
+
+;;; Get dap-mode setup for Python. You need dap-python as well as ptvsd on your system.
+(require 'dap-python)
+
+;;; Yasnippet setup in global mode.
+(yas-global-mode 1)
+
+;;; Change auto-revert-mode back to relying on file-system notifications, because the delay is too long.
+(setq auto-revert-use-notify t)
+
+;; Turn off super-save mode, which saves buffers when you switch focus.
+(super-save-mode -1)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Neil edits ends here
 
