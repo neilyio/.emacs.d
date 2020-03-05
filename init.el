@@ -6,7 +6,7 @@
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
 ;; Created: Thu Mar 14 10:15:28 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Thu Feb 20 17:09:17 2020 (-0800)
+;; Last-Updated: Thu Mar  5 14:19:48 2020 (-0800)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
 ;; Keywords: M-EMACS .emacs.d init
@@ -260,6 +260,9 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 (define-key smartparens-mode-map (kbd "M-[") 'sp-backward-unwrap-sexp)
 (define-key smartparens-mode-map (kbd "M-]") 'sp-unwrap-sexp)
 (define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+(define-key smartparens-mode-map (kbd "M-(") 'sp-wrap-round)
+(define-key smartparens-mode-map (kbd "M-[") 'sp-wrap-square)
+(define-key smartparens-mode-map (kbd "M-{") 'sp-wrap-curly)
 
 ;; Smartparens enable in extra modes..
 ;;; Don't close single quotes in these modes.
