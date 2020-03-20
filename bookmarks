@@ -3,8 +3,8 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-refile-last-stored"
- (filename . "c:/Users/neilh/Documents/orgmode/software/blender.org")
- (front-context-string . "** Draw Method\nA")
- (rear-context-string . "t.scene object.\n")
- (position . 26883))
+ (filename . "c:/Users/neilh/Documents/orgmode/software/elisp.org")
+ (front-context-string . "** get-buffer\nCa")
+ (rear-context-string . "one/21466#21466\n")
+ (position . 20939))
 )

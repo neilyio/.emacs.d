@@ -6,7 +6,7 @@
 ;; Copyright (C) 2019 Mingde (Matthew) Zeng
 ;; Created: Thu Mar 14 10:15:28 2019 (-0400)
 ;; Version: 2.0.0
-;; Last-Updated: Thu Mar  5 14:19:48 2020 (-0800)
+;; Last-Updated: Fri Mar 20 11:36:48 2020 (-0700)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: https://github.com/MatthewZMD/.emacs.d
 ;; Keywords: M-EMACS .emacs.d init
@@ -257,12 +257,51 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 
 ;; Find some new bindings for the smartparens unwrap functions.
 ;; Also add some bindings recommended in the package author's example.
-(define-key smartparens-mode-map (kbd "M-[") 'sp-backward-unwrap-sexp)
-(define-key smartparens-mode-map (kbd "M-]") 'sp-unwrap-sexp)
+(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
+(define-key smartparens-mode-map (kbd "C-M-a") 'sp-backward-down-sexp)
+(define-key smartparens-mode-map (kbd "C-S-d") 'sp-beginning-of-sexp)
+(define-key smartparens-mode-map (kbd "C-S-a") 'sp-end-of-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-e") 'sp-up-sexp)
+(define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
+(define-key smartparens-mode-map (kbd "C-M-t") 'sp-transpose-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-n") 'sp-forward-hybrid-sexp)
+(define-key smartparens-mode-map (kbd "C-M-p") 'sp-backward-hybrid-sexp)
+
 (define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+(define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)
+
+;(define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
+;(define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+
+(define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+
+(define-key smartparens-mode-map (kbd "M-D") 'sp-splice-sexp)
+(define-key smartparens-mode-map (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
+(define-key smartparens-mode-map (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
+(define-key smartparens-mode-map (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
+
+(define-key smartparens-mode-map (kbd "C-]") 'sp-select-next-thing-exchange)
+(define-key smartparens-mode-map (kbd "C-<left_bracket>") 'sp-select-previous-thing)
+(define-key smartparens-mode-map (kbd "C-M-]") 'sp-select-next-thing)
+
+(define-key smartparens-mode-map (kbd "M-F") 'sp-forward-symbol)
+(define-key smartparens-mode-map (kbd "M-B") 'sp-backward-symbol)
+
+(define-key smartparens-mode-map (kbd "C-\"") 'sp-change-inner)
+(define-key smartparens-mode-map (kbd "M-i") 'sp-change-enclosing)
+
 (define-key smartparens-mode-map (kbd "M-(") 'sp-wrap-round)
 (define-key smartparens-mode-map (kbd "M-[") 'sp-wrap-square)
 (define-key smartparens-mode-map (kbd "M-{") 'sp-wrap-curly)
+
 
 ;; Smartparens enable in extra modes..
 ;;; Don't close single quotes in these modes.
@@ -276,7 +315,7 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 (global-set-key (kbd "C-M-x") 'eval-defun)
 
 ;; Set the tabnine idle time to something sane.
-(setq company-idle-delay 0.75)
+(setq company-idle-delay 0.25)
 
 ;; M-Emacs remaps to save all buffers. Reclaim the default save-buffer.
 (global-set-key  (kbd "C-x C-s") 'save-buffer)
@@ -315,6 +354,12 @@ If you experience freezing, decrease this.  If you experience stuttering, increa
 
 ;; Turn off super-save mode, which saves buffers when you switch focus.
 (super-save-mode -1)
+
+(use-package visual-regexp-steroids
+  :ensure t
+  :bind (("C-c r" . 'vr/replace)
+         ("C-c q" . 'vr/query-replace)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Neil edits ends here
 
